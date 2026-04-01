@@ -44,7 +44,7 @@ class Pet:
 
     def add_task(self, task: Task):
         """Add a task to this pet's task list."""
-        task.pet_name = self.name  # <--- assign pet_name here
+        task.pet_name = self.name 
         self.tasks.append(task)
 
     def get_tasks(self):
@@ -77,7 +77,7 @@ class Scheduler:
         tasks = []
         for pet in owner.pets:
             for t in pet.tasks:
-                t.pet_name = pet.name  # track which pet
+                t.pet_name = pet.name  
                 tasks.append(t)
 
         # Sort tasks by priority
@@ -101,7 +101,7 @@ class Scheduler:
         """Return tasks filtered by pet name and/or completion status."""
         filtered = tasks
         if pet_name:
-            filtered = [t for t in filtered if t.pet_name == pet_name]  # You may need to add pet_name to Task
+            filtered = [t for t in filtered if t.pet_name == pet_name]  
         if completed is not None:
             filtered = [t for t in filtered if t.completed == completed]
         return filtered
@@ -109,7 +109,6 @@ class Scheduler:
     def detect_conflicts(self, tasks: List[Task]):
         """Return a list of warning messages if two tasks are scheduled at the same time for the same pet."""
         warnings = []
-        # For simplicity, we check tasks with the same due_date
         scheduled_tasks = [t for t in tasks if t.due_date]
         for i, t1 in enumerate(scheduled_tasks):
             for t2 in scheduled_tasks[i+1:]:

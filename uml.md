@@ -20,12 +20,17 @@ class Task {
   - duration: int
   - priority: str
   - completed: bool
+  - frequency: str
+  - due_date: datetime
+  - pet_name: str
   + mark_complete()
 }
 
 class Scheduler {
   + generate_schedule(owner)
-  + sort_tasks(tasks)
+  + sort_tasks(tasks, by)
+  + filter_tasks(tasks, pet_name, completed)
+  + detect_conflicts(tasks)
 }
 
 Owner --> Pet

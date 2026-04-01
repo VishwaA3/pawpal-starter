@@ -53,3 +53,19 @@ pip install -r requirements.txt
 - The command to run tests: python -m pytest
 - The tests cover: task completion, adding tasks to pets, sorting tasks, repetitive tasks, conflict detection, pets with no tasks, and filtering tasks. 
 - My confidence level is a 5/5, all the tests passed, and I was also able to test edge cases such as empty task lists. 
+
+## Features
+1. Add pets and manage their tasks
+2. Recurring tasks are also managed (daily/weekly)
+3. Automatic tasks sorted by priority
+4. Filter tasks through their pet or completion status
+5. Conflict detection for tasks that end up clashing
+6. Smart scheduling using a custom Scheduler class
+
+## Demo of PawPal+
+![PawPal Main Dashboard Part 1](/C:\Users\rishi\Documents\AI110\pawpal-starter\part1.png)
+![PawPal Main Dashboard Part 1](/C:\Users\rishi\Documents\AI110\pawpal-starter\part2.png)
+![PawPal Main Dashboard Part 1](/C:\Users\rishi\Documents\AI110\pawpal-starter\part3.png)
+
+## Mermaid Screenshot
+![PawPal Main Dashboard Part 1](/C:\Users\rishi\Documents\AI110\pawpal-starter\uml_final.png)
