@@ -9,10 +9,29 @@ class Task:
     duration: int
     priority: str
     completed: bool = False
+    frequency: str = None  # None, "daily", or "weekly"
+    due_date: datetime = None  # optional due date
 
     def mark_complete(self):
-        """Mark task as completed."""
         self.completed = True
+        # Auto-create next recurring task
+        if self.frequency == "daily":
+            return Task(
+                title=self.title,
+                duration=self.duration,
+                priority=self.priority,
+                frequency=self.frequency,
+                due_date=(self.due_date + timedelta(days=1)) if self.due_date else None,
+            )
+        elif self.frequency == "weekly":
+            return Task(
+                title=self.title,
+                duration=self.duration,
+                priority=self.priority,
+                frequency=self.frequency,
+                due_date=(self.due_date + timedelta(weeks=1)) if self.due_date else None,
+            )
+        return None
 
 
 @dataclass
@@ -48,17 +67,50 @@ class Owner:
             all_tasks.extend(pet.get_tasks())
         return all_tasks
 
-
+@dataclass
 class Scheduler:
     """Handles generating and sorting schedules for a pet owner."""
 
     def generate_schedule(self, owner: Owner):
-        """Return a sorted list of all tasks for the owner."""
-        tasks = owner.get_all_tasks()
-        sorted_tasks = self.sort_tasks(tasks)
-        return sorted_tasks
+        tasks = []
+        for pet in owner.pets:
+            for t in pet.tasks:
+                t.pet_name = pet.name  # track which pet
+                tasks.append(t)
 
-    def sort_tasks(self, tasks: List[Task]):
-        """Sort tasks by priority (high > medium > low)."""
-        priority_order = {"high": 3, "medium": 2, "low": 1}
-        return sorted(tasks, key=lambda task: priority_order[task.priority], reverse=True)
+        # Sort tasks by priority
+        tasks = self.sort_tasks(tasks, by="priority")
+        # Detect conflicts
+        conflicts = self.detect_conflicts(tasks)
+
+        return tasks, conflicts
+
+    def sort_tasks(self, tasks: List[Task], by: str = "priority"):
+        """Sort tasks by priority (high > medium > low) or duration (shortest first)."""
+        if by == "priority":
+            priority_order = {"high": 0, "medium": 1, "low": 2}
+            return sorted(tasks, key=lambda t: priority_order[t.priority])
+        elif by == "duration":
+            return sorted(tasks, key=lambda t: t.duration)
+        else:
+            return tasks
+        
+    def filter_tasks(self, tasks: List[Task], pet_name: str = None, completed: bool = None):
+        """Return tasks filtered by pet name and/or completion status."""
+        filtered = tasks
+        if pet_name:
+            filtered = [t for t in filtered if t.pet_name == pet_name]  # You may need to add pet_name to Task
+        if completed is not None:
+            filtered = [t for t in filtered if t.completed == completed]
+        return filtered
+    
+    def detect_conflicts(self, tasks: List[Task]):
+        """Return a list of warning messages if two tasks are scheduled at the same time for the same pet."""
+        warnings = []
+        # For simplicity, we check tasks with the same due_date
+        scheduled_tasks = [t for t in tasks if t.due_date]
+        for i, t1 in enumerate(scheduled_tasks):
+            for t2 in scheduled_tasks[i+1:]:
+                if t1.due_date == t2.due_date:
+                    warnings.append(f"Conflict: {t1.title} and {t2.title} scheduled at the same time.")
+        return warnings
