@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List
-
+from datetime import datetime, timedelta
 
 @dataclass
 class Task:
@@ -9,8 +9,9 @@ class Task:
     duration: int
     priority: str
     completed: bool = False
-    frequency: str = None  # None, "daily", or "weekly"
-    due_date: datetime = None  # optional due date
+    frequency: str = None  
+    due_date: datetime = None  
+    pet_name: str = None  
 
     def mark_complete(self):
         self.completed = True
@@ -43,6 +44,7 @@ class Pet:
 
     def add_task(self, task: Task):
         """Add a task to this pet's task list."""
+        task.pet_name = self.name  # <--- assign pet_name here
         self.tasks.append(task)
 
     def get_tasks(self):

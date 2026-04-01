@@ -48,3 +48,8 @@ pip install -r requirements.txt
 - Filtering the tasks allows displaying them by pet or completion.
 - Repetitive tasks that happen daily/weekly are automatically generated once they are completed. 
 - Conflict detection will warn if two tasks are clashing in their timings. 
+
+## Testing PawPal+
+- The command to run tests: python -m pytest
+- The tests cover: task completion, adding tasks to pets, sorting tasks, repetitive tasks, conflict detection, pets with no tasks, and filtering tasks. 
+- My confidence level is a 5/5, all the tests passed, and I was also able to test edge cases such as empty task lists. 
